@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane 
+	prefHeight="420.0" 
+	prefWidth="446.0" 
+	xmlns="http://javafx.com/javafx/15.0.1" 
+	xmlns:fx="http://javafx.com/fxml/1" 
+	fx:controller="view.ListController">
+	
+	<ListView fx:id="listView" 
+		prefHeight="400.0" 
+		prefWidth="240.0" 
+		AnchorPane.bottomAnchor="10" 
+		AnchorPane.rightAnchor="196.0" 
+		AnchorPane.topAnchor="10" 
+	/>
+		
+   <TitledPane animated="false" 
+   		layoutX="266.0" 
+   		layoutY="118.0" 
+   		prefHeight="208.0" 
+   		prefWidth="164.0" 
+   		text="Song" 
+   		AnchorPane.bottomAnchor="110.0"
+   		AnchorPane.leftAnchor="260.0" 
+   		AnchorPane.rightAnchor="10.0" 
+   		AnchorPane.topAnchor="110.0">
+     <content>
+       <AnchorPane 
+    	minHeight="0.0" 
+    	minWidth="0.0" 
+    	prefHeight="225.0" 
+    	prefWidth="162.0" />
+     </content>
+   </TitledPane>
+	
+</AnchorPane>

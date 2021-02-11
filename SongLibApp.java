@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import view.SongLibController;
 
 
 public class SongLibApp extends Application{
@@ -13,11 +14,12 @@ public class SongLibApp extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/view/songlib.fxml"));
-		
 		AnchorPane root = (AnchorPane)loader.load();
 		
-		Scene scene = new Scene(root);
+		SongLibController listController = loader.getController();
+		listController.start();
 		
+		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Song Library");
 		primaryStage.setResizable(false);

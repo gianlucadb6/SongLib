@@ -1,4 +1,4 @@
-package songlib.view;
+package view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -1,4 +1,4 @@
-package songlib.app;
+package app;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -12,7 +12,7 @@ public class SongLibApp extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("/songlib/view/songlib.fxml"));
+		loader.setLocation(getClass().getResource("/view/songlib.fxml"));
 		
 		AnchorPane root = (AnchorPane)loader.load();
 		

@@ -19,6 +19,19 @@ public class Song {
 	public Song(String name, String artist){
 		this(name, artist, "", "");
 	}
+	
+	public String toString() {
+		if(!this.album.equals("") && !this.year.equals("")) {
+			return "Title: " + this.name + "\nArtist: " + this.artist + 
+					"\nAlbum: " + this.album + "\nYear: " + this.year;
+		}else {
+			return "Title: " + this.name + "\nArtist: " + this.artist;
+		}
+	}
+	
+	public String getName() {
+		return this.name;
+	}
 
 	
 

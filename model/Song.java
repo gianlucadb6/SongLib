@@ -33,6 +33,24 @@ public class Song {
 		return this.name;
 	}
 
-	
+	public String getArtist() {
+		return this.artist;
+	}
+
+    	public void setName(String name) {
+    	    this.name = name;
+   	 }
+
+	public void setArtist(String artist) {
+	        this.artist = artist;
+	 }
+
+	    public void setAlbum(String album) {
+	        this.album = album;
+	    }
+
+	    public void setYear(String year) {
+	        this.year = year;
+ 	   }
 
 }

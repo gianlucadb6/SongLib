@@ -16,7 +16,7 @@
    <children>
       <ListView fx:id = "listView" layoutX="6.0" layoutY="107.0" prefHeight="389.0" prefWidth="296.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="325.0" AnchorPane.topAnchor="0.0"/>
       <Button fx:id = "add" layoutX="532.0" layoutY="180.0" mnemonicParsing="false" text="Add" onAction="#convertButton"/>
- 	  <Button fx:id = "edit" layoutX="340.0" layoutY="70.0" mnemonicParsing="false" text="Edit" onAction="#convertButton"/>
+ 	  <Button fx:id = "edit" layoutX="340.0" layoutY="70.0" mnemonicParsing="false" text="Edit" onAction="#editButton"/>
  	  <Button fx:id = "delete" layoutX="340.0" layoutY="30.0" mnemonicParsing="false" text="Delete" onAction="#convertButton"/>
  	  <Text fx:id="display" layoutX="450.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" />
    	  <TextField fx:id="title" layoutX="475.0" layoutY="16.0" promptText="Title" />

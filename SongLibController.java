@@ -27,8 +27,10 @@ public class SongLibController {
 	public void start(Stage mainStage) {
 		Song song1 = new Song("Fear", "Kendrick");
 		Song song2 = new Song("10cc", "Biggie", "1995", "Ready to Die");
+		Song song3 = new Song("Let Down", "Radiohead", "1997", "Ok Computer");
+		Song song4 = new Song("Airbag", "Radiohead", "1997", "Ok Computer");
 		
-		obsList = FXCollections.observableArrayList(song1, song2);
+		obsList = FXCollections.observableArrayList(song1, song2, song3, song4);
 		listView.setItems(obsList);
 		listView.getSelectionModel().select(0);
 		display.setText(listView.getSelectionModel().getSelectedItem().toString());
@@ -46,8 +48,9 @@ public class SongLibController {
 	 * alphabetical ordering of list items
 	 * list items don't show all the info, just song name
 	 * file that holds on to library info
+	 * when adding name, artist, year combo or name, artist, album combo only info saved is name and artist
 	 * edit option
-	 * delete option - done
+	 * delete option: if delete last part in list the selection box needs to go blank
 	 * empty list select(0)
 	 */
 	private void showSong(Stage mainStage) {
@@ -59,24 +62,61 @@ public class SongLibController {
 	public void convertButton(ActionEvent e) {
 		Button b = (Button)e.getSource();
 		if(b == add) {
-			if(title.getText().equals("") || artist.getText().contentEquals("")) {
-				if(title.getText().equals("")) {
-					title.setPromptText("Enter a a valid title.");
-				}
-				if(artist.getText().contentEquals("")) {
-					artist.setPromptText("Enter a valid artist.");					
+			if(isDuplicate(title.getText(),artist.getText(),obsList) == false) {
+				if(title.getText().equals("") || artist.getText().contentEquals("")) {
+					if(title.getText().equals("")) {
+						title.setPromptText("Enter a a valid title.");
+					}
+					if(artist.getText().contentEquals("")) {
+						artist.setPromptText("Enter a valid artist.");					
+					}
+				}else {
+					if(album.getText().equals("") && year.getText().equals("")) {
+						obsList.add(new Song(title.getText(), artist.getText()));
+					}else {
+						obsList.add(new Song(title.getText(), artist.getText(),
+								album.getText(), year.getText()));
+					}
 				}
 			}else {
-				if(album.getText().equals("") && year.getText().equals("")) {
-					obsList.add(new Song(title.getText(), artist.getText()));
+				//Not sure how we want to do this but tell user that song already exists
+				
+				
+			}
+		//Delete button
+		}else if(b == delete) {
+			if(obsList.isEmpty() == false) {
+				int index = listView.getSelectionModel().getSelectedIndex();
+				if(obsList.size() == 1) {
+					listView.getSelectionModel().clearSelection();
+					obsList.remove(index);
+				}else if((obsList.size()-1) == index) {
+					listView.getSelectionModel().select(index-1);
+					obsList.remove(index);
+					
 				}else {
-					obsList.add(new Song(title.getText(), artist.getText(),
-							album.getText(), year.getText()));
+					listView.getSelectionModel().select(index+1);
+					obsList.remove(index);
+				}
+			}else {
+				//Not sure how we want to do this but tell user list is empty
+			}
+		}
+	}
+	
+	//Edit Button
+	public void editButton(ActionEvent e) {
+		//if()	
+		
+	}
+	
+	//Checks if song is in Songlist
+	public boolean isDuplicate(String name, String artist, ObservableList<Song> songList) {
+		for(int x = 0; x<songList.size(); x++) {
+			if(name.compareTo(songList.get(x).getName()) == 0 && artist.compareTo(songList.get(x).getArtist()) == 0) {
+					return true;
 				}
 			}
-		}else if(b == delete) {
-			int index = listView.getSelectionModel().getSelectedIndex();
-			obsList.remove(index);
-		}
+		return false;
 	}
 }

@@ -106,10 +106,37 @@ public class SongLibController {
 	
 	//Edit Button
 	public void editButton(ActionEvent e) {
-		//if()	
+		
+		if(obsList.isEmpty() == false) {	
+			Song oldSong = listView.getSelectionModel().getSelectedItem();
+			Song newSong = oldSong;
+			if(!title.getText().equals("")){
+				newSong.setName(title.getText());
+			}
+			if(!artist.getText().equals("")){
+				newSong.setArtist(artist.getText());
+			}
+			if(!album.getText().equals("")){
+				newSong.setName(album.getText());
+			}
+			if(!year.getText().equals("")){
+				newSong.setYear(year.getText());
+			}
+			if(!isDuplicate(newSong.getName(),newSong.getArtist(),obsList)) {
+				int index = listView.getSelectionModel().getSelectedIndex();
+				obsList.remove(index);
+				obsList.add(newSong);
+				listView.getSelectionModel().select(index);
+			}else {
+				//Tell user song trying to edit already exists
+			}
+		}
+		else{
+			
+			//Tell user list is empty
+		}
 		
 	}
-	
 	//Checks if song is in Songlist
 	public boolean isDuplicate(String name, String artist, ObservableList<Song> songList) {
 		for(int x = 0; x<songList.size(); x++) {

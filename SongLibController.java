@@ -25,10 +25,10 @@ public class SongLibController {
 	private ObservableList<Song> obsList;
 	
 	public void start(Stage mainStage) {
-		Song song1 = new Song("Fear", "Kendrick");
-		Song song2 = new Song("10cc", "Biggie", "1995", "Ready to Die");
-		Song song3 = new Song("Let Down", "Radiohead", "1997", "Ok Computer");
-		Song song4 = new Song("Airbag", "Radiohead", "1997", "Ok Computer");
+		Song song1 = new Song("10cc", "Biggie", "1995", "Ready to Die");
+		Song song2= new Song("Airbag", "Radiohead", "Ok Computer", "1997");
+		Song song4 = new Song("Fear", "Kendrick");
+		Song song3 = new Song("Let Down", "Radiohead", "Ok Computer", "1997");
 		
 		obsList = FXCollections.observableArrayList(song1, song2, song3, song4);
 		listView.setItems(obsList);
@@ -72,10 +72,12 @@ public class SongLibController {
 					}
 				}else {
 					if(album.getText().equals("") && year.getText().equals("")) {
-						obsList.add(new Song(title.getText(), artist.getText()));
+						Song newSong = new  Song(title.getText(), artist.getText());
+						addSong(newSong,obsList);
 					}else {
-						obsList.add(new Song(title.getText(), artist.getText(),
-								album.getText(), year.getText()));
+						Song newSong = new Song(title.getText(), artist.getText(),
+								album.getText(), year.getText());
+						addSong(newSong,obsList);
 					}
 				}
 			}else {
@@ -125,8 +127,7 @@ public class SongLibController {
 			if(!isDuplicate(newSong.getName(),newSong.getArtist(),obsList)) {
 				int index = listView.getSelectionModel().getSelectedIndex();
 				obsList.remove(index);
-				obsList.add(newSong);
-				listView.getSelectionModel().select(index);
+				addSong(newSong,obsList);
 			}else {
 				//Tell user song trying to edit already exists
 			}
@@ -137,6 +138,63 @@ public class SongLibController {
 		}
 		
 	}
+	
+	//Places song in correct position in list
+	public static void addSong(Song newSong, ObservableList<Song> songList ) {
+		if(songList.isEmpty()) {
+			songList.add(newSong);
+			return;
+		}
+		if(songList.size() == 1) {
+			if(isBefore(newSong, songList.get(0))) {
+				songList.add(0, newSong);
+				return;
+			}else {
+				songList.add(newSong);
+				return;
+			}
+		}
+		if(isBefore(newSong,songList.get(0))) {
+			songList.add(0, newSong);
+			return;
+		}
+		for(int index = 1; index < songList.size(); index++) {
+			if(!isBefore(newSong,songList.get(index-1)) && isBefore(newSong,songList.get(index))) {
+				songList.add(index, newSong);
+				return;
+			}
+			
+		}
+		songList.add(newSong);
+	}
+	
+	//Checks whether song is alphabetically before or after another song
+	public static boolean isBefore(Song song1, Song song2) {
+		String name1 = song1.getName().toLowerCase();
+		String name2 = song2.getName().toLowerCase();
+		String artist1 = song1.getArtist().toLowerCase();
+		String artist2 = song2.getArtist().toLowerCase();
+		
+		//Song 1 comes first in alphabet by title
+		if(name1.compareTo(name2) < 0) {
+			return true;
+		}
+		//Song 2 comes first in alphabet by title
+		else if(name1.compareTo(name2) > 0) {
+			return false;
+			
+		}else {
+			//Song 1 comes first in alphabet by artist
+			if(artist1.compareTo(artist2) <  0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+	}
+	
 	//Checks if song is in Songlist
 	public boolean isDuplicate(String name, String artist, ObservableList<Song> songList) {
 		for(int x = 0; x<songList.size(); x++) {

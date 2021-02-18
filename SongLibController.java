@@ -119,7 +119,7 @@ public class SongLibController {
 				newSong.setArtist(artist.getText());
 			}
 			if(!album.getText().equals("")){
-				newSong.setName(album.getText());
+				newSong.setAlbum(album.getText());
 			}
 			if(!year.getText().equals("")){
 				newSong.setYear(year.getText());

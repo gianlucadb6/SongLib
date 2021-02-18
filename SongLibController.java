@@ -74,10 +74,12 @@ public class SongLibController {
 					if(album.getText().equals("") && year.getText().equals("")) {
 						Song newSong = new  Song(title.getText(), artist.getText());
 						addSong(newSong,obsList);
+						listView.getSelectionModel().select(getIndex(newSong,obsList));
 					}else {
 						Song newSong = new Song(title.getText(), artist.getText(),
 								album.getText(), year.getText());
 						addSong(newSong,obsList);
+						listView.getSelectionModel().select(getIndex(newSong,obsList));
 					}
 				}
 			}else {
@@ -203,5 +205,14 @@ public class SongLibController {
 				}
 			}
 		return false;
+	}
+	//Gets index of song
+	public int getIndex(Song song, ObservableList<Song> songList) {
+		for(int x = 0; x<songList.size(); x++) {
+			if(song.getName().compareTo(songList.get(x).getName()) == 0 && song.getArtist().compareTo(songList.get(x).getArtist()) == 0) {
+					return x;
+				}
+		}
+		return -1;
 	}
 }

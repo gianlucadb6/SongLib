@@ -1,5 +1,7 @@
 package view;
 
+
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,8 +10,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import model.Song;
 import javafx.event.ActionEvent;
+
 
 public class SongLibController {
 	@FXML ListView<Song> listView;
@@ -27,8 +32,9 @@ public class SongLibController {
 	public void start(Stage mainStage) {
 		Song song1 = new Song("10cc", "Biggie", "1995", "Ready to Die");
 		Song song2= new Song("Airbag", "Radiohead", "Ok Computer", "1997");
-		Song song4 = new Song("Fear", "Kendrick");
-		Song song3 = new Song("Let Down", "Radiohead", "Ok Computer", "1997");
+		Song song3 = new Song("Fear", "Kendrick");
+		Song song4 = new Song("Let Down", "Radiohead", "Ok Computer", "1997");
+
 		
 		obsList = FXCollections.observableArrayList(song1, song2, song3, song4);
 		listView.setItems(obsList);
@@ -48,9 +54,8 @@ public class SongLibController {
 	 * alphabetical ordering of list items
 	 * list items don't show all the info, just song name
 	 * file that holds on to library info
-	 * when adding name, artist, year combo or name, artist, album combo only info saved is name and artist
 	 * edit option
-	 * delete option: if delete last part in list the selection box needs to go blank
+	 * delete option - done
 	 * empty list select(0)
 	 */
 	private void showSong(Stage mainStage) {
@@ -76,15 +81,20 @@ public class SongLibController {
 						addSong(newSong,obsList);
 						listView.getSelectionModel().select(getIndex(newSong,obsList));
 					}else {
+						
 						Song newSong = new Song(title.getText(), artist.getText(),
 								album.getText(), year.getText());
 						addSong(newSong,obsList);
 						listView.getSelectionModel().select(getIndex(newSong,obsList));
+						
 					}
 				}
 			}else {
 				//Not sure how we want to do this but tell user that song already exists
-				
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Duplicate");
+				alert.setContentText("Song you've entered is already in you library");
+				alert.showAndWait();
 				
 			}
 		//Delete button
@@ -104,6 +114,10 @@ public class SongLibController {
 				}
 			}else {
 				//Not sure how we want to do this but tell user list is empty
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Empty List");
+				alert.setContentText("You have no songs in your library");
+				alert.showAndWait();
 			}
 		}
 	}
@@ -113,30 +127,50 @@ public class SongLibController {
 		
 		if(obsList.isEmpty() == false) {	
 			Song oldSong = listView.getSelectionModel().getSelectedItem();
-			Song newSong = oldSong;
-			if(!title.getText().equals("")){
-				newSong.setName(title.getText());
+			Song newSong = new Song(title.getText(), artist.getText(),album.getText(),year.getText());
+			int index = listView.getSelectionModel().getSelectedIndex();
+			//Gets correct values for edited song
+			if(title.getText().equals("")){
+				newSong.setName(oldSong.getName());
 			}
-			if(!artist.getText().equals("")){
-				newSong.setArtist(artist.getText());
+			if(artist.getText().equals("")){
+				newSong.setArtist(oldSong.getArtist());
 			}
-			if(!album.getText().equals("")){
-				newSong.setAlbum(album.getText());
+			if(album.getText().equals("")) {
+				newSong.setAlbum(oldSong.getAlbum());
 			}
-			if(!year.getText().equals("")){
-				newSong.setYear(year.getText());
+			if(year.getText().equals("")) {
+				newSong.setYear(oldSong.getYear());
 			}
-			if(!isDuplicate(newSong.getName(),newSong.getArtist(),obsList)) {
-				int index = listView.getSelectionModel().getSelectedIndex();
+			
+			//Edit only selected song year and/or album
+			if(title.getText().equals("") && artist.getText().equals("")) {
 				obsList.remove(index);
 				addSong(newSong,obsList);
-			}else {
-				//Tell user song trying to edit already exists
+				listView.getSelectionModel().select(getIndex(newSong,obsList));
+				
 			}
+			//Edit atleast name or artist
+			else if(!isDuplicate(newSong.getName(),newSong.getArtist(), obsList)) {
+				obsList.remove(index);
+				addSong(newSong,obsList);
+				listView.getSelectionModel().select(getIndex(newSong,obsList));
+			}else {
+				//Tell user song already exists
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Song Already Exists");
+				alert.setContentText("Song your trying to change already exists");
+				alert.showAndWait();
+			}
+		
 		}
 		else{
 			
 			//Tell user list is empty
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Empty List");
+			alert.setContentText("You have no songs in your library");
+			alert.showAndWait();
 		}
 		
 	}
@@ -197,6 +231,7 @@ public class SongLibController {
 		
 	}
 	
+	
 	//Checks if song is in Songlist
 	public boolean isDuplicate(String name, String artist, ObservableList<Song> songList) {
 		for(int x = 0; x<songList.size(); x++) {
@@ -206,7 +241,7 @@ public class SongLibController {
 			}
 		return false;
 	}
-	//Gets index of song
+	
 	public int getIndex(Song song, ObservableList<Song> songList) {
 		for(int x = 0; x<songList.size(); x++) {
 			if(song.getName().compareTo(songList.get(x).getName()) == 0 && song.getArtist().compareTo(songList.get(x).getArtist()) == 0) {
@@ -214,5 +249,6 @@ public class SongLibController {
 				}
 		}
 		return -1;
-	}
+	}	
 }
+

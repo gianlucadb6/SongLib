@@ -14,7 +14,7 @@ import javafx.event.ActionEvent;
 
 /*TO DO:
  * alphabetical ordering of list items
- * list items don't show all the info, just song name and maybe artist/album
+ * list items don't show all the info, just song name and maybe artist/album so ("SongTitle, Artist")
  * file that holds on to library info - done
  * edit option
  * delete option - done

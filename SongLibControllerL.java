@@ -306,8 +306,11 @@ public class SongLibController {
 
 	//Checks if song is in Songlist
 	public boolean isDuplicate(String name, String artist, ObservableList<Song> songList) {
+		String name1 = name.toLowerCase();
+		String artist1 = artist.toLowerCase();
+
 		for(int x = 0; x<songList.size(); x++) {
-			if(name.compareTo(songList.get(x).getName()) == 0 && artist.compareTo(songList.get(x).getArtist()) == 0) {
+			if(name1.compareTo(songList.get(x).getName().toLowerCase()) == 0 && artist1.compareTo(songList.get(x).getArtist().toLowerCase()) == 0) {
 				return true;
 			}
 		}

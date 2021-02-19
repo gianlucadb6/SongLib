@@ -23,7 +23,7 @@ import javafx.event.ActionEvent;
  * no item display - done
  * no duplicates (case insensitive?)
  * assure that year is an int? or one arg constructor to check if it is album or year
- * when app is closed, REWRITE everything to wiped file
+ * when app is closed, REWRITE everything to wiped file - sorta done
  * 
  */
 

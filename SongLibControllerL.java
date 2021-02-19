@@ -125,17 +125,21 @@ public class SongLibController {
 							alert.setTitle("Invalid Year");
 							alert.setContentText("You've entered an invalid year. Year must be between 1000 and 2021");
 							alert.showAndWait();
-						}
-						
-						
+						}							
 					}
 					//If all fields are filed
 					else {
-
-						Song newSong = new Song(title.getText(), artist.getText(),
-								album.getText(), Integer.parseInt(year.getText()));
-						addSong(newSong,obsList);
-						listView.getSelectionModel().select(getIndex(newSong,obsList));
+						if(isValidYear(year.getText())) {
+							Song newSong = new Song(title.getText(), artist.getText(),
+									album.getText(), Integer.parseInt(year.getText()));
+							addSong(newSong,obsList);
+							listView.getSelectionModel().select(getIndex(newSong,obsList));
+						}else {
+							Alert alert = new Alert(AlertType.WARNING);
+							alert.setTitle("Invalid Year");
+							alert.setContentText("You've entered an invalid year. Year must be between 1000 and 2021");
+							alert.showAndWait();
+						}
 
 					}
 				}
@@ -204,7 +208,7 @@ public class SongLibController {
 			if(album.getText().equals("")) {
 				newSong.setAlbum(oldSong.getAlbum());
 			}
-			if(Integer.parseInt(year.getText()) == 0) {
+			if(newSong.getYear() == -1) {
 				newSong.setYear(oldSong.getYear());
 			}
 

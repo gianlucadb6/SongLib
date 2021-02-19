@@ -42,6 +42,14 @@ public class Song {
 		return this.artist;
 	}
 
+	public String getAlbum() {
+		return this.album;
+	}
+	
+	public int getYear() {
+		return this.year;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}

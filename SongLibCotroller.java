@@ -3,27 +3,31 @@ package view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Song;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 /*TO DO:
  * alphabetical ordering of list items
- * list items don't show all the info, just song name and maybe artist/album so ("SongTitle, Artist")
+ * list items don't show all the info, just song name and maybe artist/album
  * file that holds on to library info - done
- * edit option
+ * edit option 
  * delete option - done
  * empty list delete - done
  * empty list select - done
  * no item display - done
  * no duplicates (case insensitive?)
  * assure that year is an int? or one arg constructor to check if it is album or year
- * when app is closed, REWRITE everything to wiped file - sorta done
+ * when app is closed, REWRITE everything to wiped file
  * 
  */
 
@@ -44,10 +48,13 @@ public class SongLibController {
 		obsList = FXCollections.observableArrayList();
 		Song.read(obsList);
 		listView.setItems(obsList);
-		if(!obsList.isEmpty()) {
+		//Assure the list is not empty so selecting the first song does not throw an error
+		//in the case that the lib is empty
+		try {
 			listView.getSelectionModel().select(0);
 			display.setText(listView.getSelectionModel().getSelectedItem().toString());
-
+		}catch(Exception e) {
+			display.setText("No Item Selected");
 		}
 		listView
 		.getSelectionModel()
@@ -56,10 +63,18 @@ public class SongLibController {
 				(obs, oldVal, newVal) -> 
 				showSong(mainStage));
 		
-
+		//When library gets closed, write all currently stored songs to our library file
+		mainStage.setOnCloseRequest(new EventHandler<WindowEvent> () {
+			public void handle(WindowEvent we) {
+				for(Song i : obsList) {
+					i.writeToFile();
+				}
+			}
+		});
 
 	}
 	
+	//method that displays song info when a song is selected
 	private void showSong(Stage mainStage) {
 		try {
 			display.setText(listView.getSelectionModel().getSelectedItem().toString());
@@ -69,7 +84,7 @@ public class SongLibController {
 	}
 
 
-
+	//method for taking action when buttons are clicked
 	public void convertButton(ActionEvent e) {
 		Button b = (Button)e.getSource();
 		if(b == add) {
@@ -78,20 +93,29 @@ public class SongLibController {
 					title.setPromptText("Enter a a valid title.");
 				}
 				if(artist.getText().contentEquals("")) {
-					artist.setPromptText("Enter a valid artist.");					
+					artist.setPromptText("Enter a valid artist.");		
 				}
+				return;
 			}else {
 				if(album.getText().equals("") && year.getText().equals("")) {
-					obsList.add(new Song(title.getText(), artist.getText()));
+					Song s = new Song(title.getText(), artist.getText());
+					obsList.add(s);
+					s.writeToFile();
 				}else {
 					try {
-					obsList.add(new Song(title.getText(), artist.getText(),
-							album.getText(), Integer.parseInt(year.getText())));		
+						Song s = new Song(title.getText(), artist.getText(),
+								album.getText(), Integer.parseInt(year.getText()));
+						obsList.add(s);
+						s.writeToFile();
 					}catch(Exception ex) {
 						album.setPromptText("Enter a valid year.");
 					}
 				}
 			}
+			title.clear();
+			artist.clear();
+			year.clear();
+			album.clear();
 			title.setPromptText("Title");
 			artist.setPromptText("Artist");
 			year.setPromptText("Year");
@@ -111,33 +135,53 @@ public class SongLibController {
 	}
 	//Edit Button
 		public void editButton(ActionEvent e) {
-			
+
 			if(obsList.isEmpty() == false) {	
 				Song oldSong = listView.getSelectionModel().getSelectedItem();
-				Song newSong = oldSong;
-				if(!title.getText().equals("")){
-					newSong.setName(title.getText());
+				Song newSong = new Song(title.getText(), artist.getText(),album.getText(), Integer.parseInt(year.getText()));
+				int index = listView.getSelectionModel().getSelectedIndex();
+				//Gets correct values for edited song
+				if(title.getText().equals("")){
+					newSong.setName(oldSong.getName());
 				}
-				if(!artist.getText().equals("")){
-					newSong.setArtist(artist.getText());
+				if(artist.getText().equals("")){
+					newSong.setArtist(oldSong.getArtist());
 				}
-				if(!album.getText().equals("")){
-					newSong.setName(album.getText());
+				if(album.getText().equals("")) {
+					newSong.setAlbum(oldSong.getAlbum());
 				}
-				if(!year.getText().equals("")){
-					newSong.setYear(Integer.parseInt(year.getText()));
+				if(year.getText().equals("")) {
+					newSong.setYear(oldSong.getYear());
 				}
-				if(!isDuplicate(newSong.getName(),newSong.getArtist(),obsList)) {
-					int index = listView.getSelectionModel().getSelectedIndex();
+				
+				//Edit only selected song year and/or album
+				if(title.getText().equals("") && artist.getText().equals("")) {
 					obsList.remove(index);
 					addSong(newSong,obsList);
-				}else {
-					//Tell user song trying to edit already exists
+					listView.getSelectionModel().select(getIndex(newSong,obsList));;
+					
 				}
+				//Edit at least name or artist
+				else if(!isDuplicate(newSong.getName(),newSong.getArtist(), obsList)) {
+					obsList.remove(index);
+					addSong(newSong,obsList);
+					listView.getSelectionModel().select(getIndex(newSong,obsList));
+				}else {
+					//Tell user song already exists
+					Alert alert = new Alert(AlertType.WARNING);
+					alert.setTitle("Song Already Exists");
+					alert.setContentText("Song your trying to change already exists");
+					alert.showAndWait();
+				}
+			
 			}
 			else{
 				
 				//Tell user list is empty
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Empty List");
+				alert.setContentText("You have no songs in your library");
+				alert.showAndWait();
 			}
 			
 		}
@@ -207,4 +251,15 @@ public class SongLibController {
 				}
 			return false;
 		}
+		
+		public int getIndex(Song song, ObservableList<Song> songList) {
+			for(int x = 0; x<songList.size(); x++) {
+				if(song.getName().compareTo(songList.get(x).getName()) == 0 && song.getArtist().compareTo(songList.get(x).getArtist()) == 0) {
+						return x;
+					}
+			}
+			return -1;
+		}	
+		
 	}
+

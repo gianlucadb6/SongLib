@@ -1,0 +1,8 @@
+., some guy in an ambulance , S2E235b, 2001
+10cc, Biggie Smalls, RTD, 1995
+Another Song, By Some Guy, thatAlbum, 1752
+Fear, Kendrick , DAMN, 2017
+I hoPe THis Breaks , th3 c0de, RIP, 2021
+Song1 , Artist1, AlbumName, 2021
+Song2, Artist1, AlbumName, 2021
+Try, With, Spaces in the field, 2000
